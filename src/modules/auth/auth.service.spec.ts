@@ -52,7 +52,7 @@ describe('AuthService', () => {
         name: 'John Doe',
         email: 'john@example.com',
         photoUrl: null,
-        role: UserRole.CUSTOMER,
+        role: UserRole.USER,
         status: UserStatus.ACTIVE,
       });
       prismaMock.user.update.mockResolvedValue({});
@@ -66,7 +66,7 @@ describe('AuthService', () => {
         name: 'John Doe',
         email: 'john@example.com',
         photoUrl: null,
-        role: UserRole.CUSTOMER,
+        role: UserRole.USER,
         status: UserStatus.ACTIVE,
       });
       expect(prismaMock.user.create).toHaveBeenCalled();
@@ -95,9 +95,9 @@ describe('AuthService', () => {
       prismaMock.user.findUnique.mockResolvedValue({
         id: 'user-123',
         email: 'john@example.com',
-        passwordHash: await bcrypt.hash('StrongPassword123!', 10),
+        password: await bcrypt.hash('StrongPassword123!', 10),
         status: UserStatus.INACTIVE,
-        role: UserRole.CUSTOMER,
+        role: UserRole.USER,
       });
 
       await expect(authService.login(loginDto)).rejects.toThrow(UnauthorizedException);
@@ -107,23 +107,23 @@ describe('AuthService', () => {
       prismaMock.user.findUnique.mockResolvedValue({
         id: 'user-123',
         email: 'john@example.com',
-        passwordHash: await bcrypt.hash('OtherPassword123!', 10),
+        password: await bcrypt.hash('OtherPassword123!', 10),
         status: UserStatus.ACTIVE,
-        role: UserRole.CUSTOMER,
+        role: UserRole.USER,
       });
 
       await expect(authService.login(loginDto)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should successfully log in with correct password', async () => {
-      const passwordHash = await bcrypt.hash('StrongPassword123!', 10);
+      const hashedPassword = await bcrypt.hash('StrongPassword123!', 10);
       prismaMock.user.findUnique.mockResolvedValue({
         id: 'user-123',
         name: 'John Doe',
         email: 'john@example.com',
-        passwordHash,
+        password: hashedPassword,
         photoUrl: null,
-        role: UserRole.CUSTOMER,
+        role: UserRole.USER,
         status: UserStatus.ACTIVE,
       });
       prismaMock.user.update.mockResolvedValue({});
@@ -144,10 +144,9 @@ describe('AuthService', () => {
 
       expect(prismaMock.user.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
-        data: { refreshTokenHash: null },
+        data: { refreshToken: null },
       });
       expect(result).toEqual({ message: 'Logged out successfully' });
     });
   });
 });
-

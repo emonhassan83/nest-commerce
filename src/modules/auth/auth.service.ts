@@ -50,17 +50,17 @@ export class AuthService {
 
     // Corner case 2: Password hashing using bcrypt with 10 salt rounds
     const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(dto.password, saltRounds);
+    const hashedPassword = await bcrypt.hash(dto.password, saltRounds);
 
     // Corner case 3: Default secure role and active status
     const user = await this.prisma.user.create({
       data: {
         email: normalizedEmail,
         name: dto.name.trim(),
-        passwordHash,
+        password: hashedPassword,
         photoUrl: dto.photoUrl,
         phoneNumber: dto.phoneNumber,
-        role: UserRole.CUSTOMER,
+        role: UserRole.USER,
         status: UserStatus.ACTIVE,
       },
       select: {
@@ -77,7 +77,7 @@ export class AuthService {
     const tokens = await this.generateTokens(user.id, user.email, user.role);
 
     // Save hashed refresh token for secure revocation
-    await this.updateRefreshTokenHash(user.id, tokens.refreshToken);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
 
     this.logger.log(`New user registered successfully: ${user.email}`);
 
@@ -107,7 +107,7 @@ export class AuthService {
     });
 
     // Timing-safe response: same error message whether email doesn't exist or password fails
-    if (!user || !user.passwordHash) {
+    if (!user || !user.password) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
@@ -117,7 +117,7 @@ export class AuthService {
     }
 
     // Corner case 3: Verify password hash
-    const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -125,8 +125,8 @@ export class AuthService {
     // Generate JWT token pair
     const tokens = await this.generateTokens(user.id, user.email, user.role);
 
-    // Update refresh token hash in database
-    await this.updateRefreshTokenHash(user.id, tokens.refreshToken);
+    // Update refresh token in database
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
 
     this.logger.log(`User logged in successfully: ${user.email}`);
 
@@ -145,12 +145,12 @@ export class AuthService {
   }
 
   /**
-   * Logout user by invalidating the refresh token hash
+   * Logout user by invalidating the refresh token
    */
   async logout(userId: string): Promise<{ message: string }> {
     await this.prisma.user.update({
       where: { id: userId },
-      data: { refreshTokenHash: null },
+      data: { refreshToken: null },
     });
 
     this.logger.log(`User logged out successfully: ${userId}`);
@@ -188,13 +188,13 @@ export class AuthService {
   /**
    * Hashes and updates refresh token in database
    */
-  private async updateRefreshTokenHash(userId: string, refreshToken: string): Promise<void> {
+  private async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
     const saltRounds = 10;
-    const refreshTokenHash = await bcrypt.hash(refreshToken, saltRounds);
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, saltRounds);
 
     await this.prisma.user.update({
       where: { id: userId },
-      data: { refreshTokenHash },
+      data: { refreshToken: hashedRefreshToken },
     });
   }
 }

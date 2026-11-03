@@ -15,13 +15,13 @@ datasource db {
 model User {
   id           String     @id @default(uuid())
   email        String     @unique
-  passwordHash String?
+  password     String?
   name         String?
   photoUrl     String?
   phoneNumber  String?
-  role         UserRole   @default(CUSTOMER)
+  role         UserRole   @default(USER)
   status       UserStatus @default(ACTIVE)
-  refreshTokenHash String?
+  refreshToken String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
@@ -31,8 +31,7 @@ model User {
 
 enum UserRole {
   ADMIN
-  SELLER
-  CUSTOMER
+  USER
 }
 
 enum UserStatus {
