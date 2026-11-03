@@ -360,6 +360,7 @@ pnpm run format
 
 - [Architecture & Project Structure Specification](file:///c:/bdcalling/explore/explore-tech/nest-commerce/docs/architecture/project-structure.md)
 - [API Conventions & Payload Standards](file:///c:/bdcalling/explore/explore-tech/nest-commerce/docs/api/api-standards.md)
+- [Authentication API Specification (বাংলা)](file:///c:/bdcalling/explore/explore-tech/nest-commerce/docs/api/auth-api.md)
 - [ADR 0001: Modular Monolith with DDD & Clean Architecture](file:///c:/bdcalling/explore/explore-tech/nest-commerce/docs/decisions/0001-modular-monolith-architecture.md)
 
 ---
