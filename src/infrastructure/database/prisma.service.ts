@@ -21,9 +21,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   async onModuleInit(): Promise<void> {
     try {
       await this.$connect();
-      this.logger.log('Database connected successfully via PrismaPg adapter');
-    } catch (error) {
-      this.logger.error('Failed to connect to the database', error);
+      // Verify real connection with a ping query
+      await this.$queryRaw`SELECT 1`;
+      this.logger.log('🚀 [Database] PostgreSQL connected successfully via Prisma Client!');
+    } catch (error: any) {
+      this.logger.error(`❌ [Database] Connection failed: ${error.message}`);
     }
   }
 
