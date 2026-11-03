@@ -6,3 +6,6 @@ export type { DatabaseConfig } from './database.config.js';
 
 export { default as jwtConfig } from './jwt.config.js';
 export type { JwtConfig } from './jwt.config.js';
+
+export { default as s3Config, getS3Config, getS3Client, s3Client } from './s3.config.js';
+export type { S3Config } from './s3.config.js';

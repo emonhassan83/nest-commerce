@@ -178,8 +178,9 @@ Nest Commerce প্রজেক্টের **Authentication ও Identity Bound
 
 ### রিকোয়েস্ট হেডার্স (Request Headers):
 ```http
-Authorization: Bearer <YOUR_ACCESS_TOKEN>
+Authorization: <YOUR_ACCESS_TOKEN>
 ```
+*(নোট: টোকেন সরাসরি `Authorization: <YOUR_ACCESS_TOKEN>` হিসেবে পাঠানো যাবে, `Bearer ` প্রিফিক্স আবশ্যক নয়)*
 
 *(রিকোয়েস্টের বডিতে কোনো ডেটা পাঠানোর প্রয়োজন নেই)*
 
@@ -207,7 +208,7 @@ Authorization: Bearer <YOUR_ACCESS_TOKEN>
 
 - **URL:** `/api/v1/auth/me`
 - **Method:** `GET`
-- **Headers:** `Authorization: Bearer <YOUR_ACCESS_TOKEN>`
+- **Headers:** `Authorization: <YOUR_ACCESS_TOKEN>` (সরাসরি টোকেন বা `Bearer <token>` উভয়ই সমর্থিত)
 - **HTTP Status Code:** `200 OK`
 
 ### সফল রেসপন্স:

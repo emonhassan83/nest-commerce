@@ -5,6 +5,7 @@ import { AppService } from './app.service.js';
 import appConfig from './config/app.config.js';
 import databaseConfig from './config/database.config.js';
 import jwtConfig from './config/jwt.config.js';
+import s3Config from './config/s3.config.js';
 import { DatabaseModule } from './infrastructure/database/database.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UserModule } from './modules/user/user.module.js';
@@ -14,7 +15,7 @@ import { UploadModule } from './modules/upload/upload.module.js';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, jwtConfig],
+      load: [appConfig, databaseConfig, jwtConfig, s3Config],
     }),
     DatabaseModule,
     AuthModule,
@@ -24,4 +25,4 @@ import { UploadModule } from './modules/upload/upload.module.js';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
