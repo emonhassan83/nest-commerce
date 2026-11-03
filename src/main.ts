@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
@@ -12,6 +12,17 @@ async function bootstrap() {
   const apiPrefix = configService.getOrThrow<string>('app.apiPrefix');
 
   app.setGlobalPrefix(apiPrefix);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   await app.listen(port);
   logger.log(`Nest Commerce server listening on port ${port} with prefix /${apiPrefix}`);
