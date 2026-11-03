@@ -269,6 +269,48 @@ pnpm nest g decorator common/decorators/current-user --no-spec
 
 ---
 
+## 🗄️ Database Architecture & File-Wise Connection Flow
+
+In our Enterprise Modular Monolith, database access is centralized in `src/infrastructure/database/` and consumed by domain modules through Repository interfaces:
+
+```text
+.env (DATABASE_URL)
+  ↓
+src/config/database.config.ts (Nest Config Registration)
+  ↓
+src/infrastructure/database/prisma.service.ts (PrismaPg Driver Adapter + Pool Lifecycle)
+  ↓
+src/infrastructure/database/transaction.service.ts (Unit of Work & Transactions)
+  ↓
+src/infrastructure/database/database.module.ts (@Global Module Exporting Services)
+  ↓
+src/app.module.ts (Root Application Module Registration)
+  ↓
+src/modules/*/repositories/ (Domain Repositories Injected with PrismaService)
+```
+
+### File-by-File Breakdown
+
+1. **[.env](file:///c:/bdcalling/explore/explore-tech/nest-commerce/.env)**:
+   - Stores the database connection string (`DATABASE_URL`).
+2. **[prisma.config.ts](file:///c:/bdcalling/explore/explore-tech/nest-commerce/prisma.config.ts)**:
+   - Configures Prisma CLI 7 for migrations and CLI operations (`schema`, `datasource.url`).
+3. **[prisma/schema.prisma](file:///c:/bdcalling/explore/explore-tech/nest-commerce/prisma/schema.prisma)**:
+   - Defines database tables, enums, indexes, and relations partitioned by bounded contexts.
+4. **[src/config/database.config.ts](file:///c:/bdcalling/explore/explore-tech/nest-commerce/src/config/database.config.ts)**:
+   - Type-safe config namespace using `@nestjs/config`'s `registerAs('database', ...)`.
+5. **[src/infrastructure/database/prisma.service.ts](file:///c:/bdcalling/explore/explore-tech/nest-commerce/src/infrastructure/database/prisma.service.ts)**:
+   - Initializes `PrismaClient` with `pg.Pool` and `@prisma/adapter-pg`.
+   - Manages graceful `$connect()` on `onModuleInit` and `$disconnect()` / `pool.end()` on `onModuleDestroy`.
+6. **[src/infrastructure/database/transaction.service.ts](file:///c:/bdcalling/explore/explore-tech/nest-commerce/src/infrastructure/database/transaction.service.ts)**:
+   - Provides a clean Unit of Work API (`runInTransaction`) for atomic business operations.
+7. **[src/infrastructure/database/database.module.ts](file:///c:/bdcalling/explore/explore-tech/nest-commerce/src/infrastructure/database/database.module.ts)**:
+   - `@Global()` NestJS module that provides and exports `PrismaService` and `TransactionService`.
+8. **[src/app.module.ts](file:///c:/bdcalling/explore/explore-tech/nest-commerce/src/app.module.ts)**:
+   - Imports `ConfigModule.forRoot({ isGlobal: true, load: [appConfig, databaseConfig] })` and `DatabaseModule`.
+
+---
+
 ## 🗄️ Database & Prisma Commands
 
 ```bash

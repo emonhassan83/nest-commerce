@@ -1,0 +1,30 @@
+// Prisma Schema for Nest Commerce (Modular Monolith)
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// -----------------------------------------------------------------------------
+// Identity & Users Bounded Context
+// -----------------------------------------------------------------------------
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  photoUrl  String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}

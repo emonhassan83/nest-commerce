@@ -1,10 +1,19 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule, ObserveInstrument } from './app.module.js';
+import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
+import { AppModule } from './app.module.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    instrument: ObserveInstrument,
-  });
-  await app.listen(process.env.PORT ?? 3000);
+  const logger = new Logger('Bootstrap');
+  const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+  const port = configService.getOrThrow<number>('app.port');
+  const apiPrefix = configService.getOrThrow<string>('app.apiPrefix');
+
+  app.setGlobalPrefix(apiPrefix);
+
+  await app.listen(port);
+  logger.log(`Nest Commerce server listening on port ${port} with prefix /${apiPrefix}`);
 }
 await bootstrap();
