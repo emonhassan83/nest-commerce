@@ -30,6 +30,8 @@ export function setupSwagger(app: INestApplication): void {
     .addTag('User', 'User management, personal profile, and administrative role controls')
     .addTag('Upload', 'AWS S3 multi-file and single-file storage upload service')
     .addTag('Category', 'Product category management, catalog hierarchy, and administration')
+    .addTag('Product', 'Product catalog management, inventory, and administration')
+    .addTag('Cart', 'Shopping cart management, items, quantity, and real-time totals')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -12,8 +12,7 @@ import { UserModule } from './modules/user/user.module.js';
 import { UploadModule } from './modules/upload/upload.module.js';
 import { CategoryModule } from './modules/category/category.module.js';
 import { ProductModule } from './modules/product/product.module.js';
-import { ProductsController } from './modules/products/products.controller.js';
-import { ProductsService } from './modules/products/products.service.js';
+import { CartModule } from './modules/cart/cart.module.js';
 
 @Module({
   imports: [
@@ -27,8 +26,9 @@ import { ProductsService } from './modules/products/products.service.js';
     UploadModule,
     CategoryModule,
     ProductModule,
+    CartModule,
   ],
-  controllers: [AppController, ProductsController],
-  providers: [AppService, ProductsService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
