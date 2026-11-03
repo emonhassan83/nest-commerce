@@ -29,6 +29,7 @@ export function setupSwagger(app: INestApplication): void {
     .addTag('Auth', 'Authentication, user registration, login, and session revocation')
     .addTag('User', 'User management, personal profile, and administrative role controls')
     .addTag('Upload', 'AWS S3 multi-file and single-file storage upload service')
+    .addTag('Category', 'Product category management, catalog hierarchy, and administration')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -44,4 +45,3 @@ export function setupSwagger(app: INestApplication): void {
 
   logger.log('Swagger documentation initialized at path /docs');
 }
-

@@ -69,13 +69,5 @@
     "typescript": "^6.0.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.1.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "undici": "^6.28.1",
-      "tmp": "^0.2.6",
-      "deepmerge-ts": "^8.0.0",
-      "minimatch": "^11.0.1"
-    }
   }
 }

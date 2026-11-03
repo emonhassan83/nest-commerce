@@ -10,6 +10,10 @@ import { DatabaseModule } from './infrastructure/database/database.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UserModule } from './modules/user/user.module.js';
 import { UploadModule } from './modules/upload/upload.module.js';
+import { CategoryModule } from './modules/category/category.module.js';
+import { ProductModule } from './modules/product/product.module.js';
+import { ProductsController } from './modules/products/products.controller.js';
+import { ProductsService } from './modules/products/products.service.js';
 
 @Module({
   imports: [
@@ -21,8 +25,10 @@ import { UploadModule } from './modules/upload/upload.module.js';
     AuthModule,
     UserModule,
     UploadModule,
+    CategoryModule,
+    ProductModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ProductsController],
+  providers: [AppService, ProductsService],
 })
 export class AppModule {}
