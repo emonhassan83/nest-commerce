@@ -33,6 +33,7 @@ export function setupSwagger(app: INestApplication): void {
     .addTag('Product', 'Product catalog management, inventory, and administration')
     .addTag('Cart', 'Shopping cart management, items, quantity, and real-time totals')
     .addTag('Order', 'Order management, checkout, status progression, and inventory fulfillment')
+    .addTag('Payment', 'Stripe checkout sessions, payment confirmations, and revenue transactions')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -6,6 +6,7 @@ import appConfig from './config/app.config.js';
 import databaseConfig from './config/database.config.js';
 import jwtConfig from './config/jwt.config.js';
 import s3Config from './config/s3.config.js';
+import paymentConfig from './config/payment.config.js';
 import { DatabaseModule } from './infrastructure/database/database.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UserModule } from './modules/user/user.module.js';
@@ -14,12 +15,13 @@ import { CategoryModule } from './modules/category/category.module.js';
 import { ProductModule } from './modules/product/product.module.js';
 import { CartModule } from './modules/cart/cart.module.js';
 import { OrderModule } from './modules/order/order.module.js';
+import { PaymentModule } from './modules/payment/payment.module.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, jwtConfig, s3Config],
+      load: [appConfig, databaseConfig, jwtConfig, s3Config, paymentConfig],
     }),
     DatabaseModule,
     AuthModule,
@@ -29,6 +31,7 @@ import { OrderModule } from './modules/order/order.module.js';
     ProductModule,
     CartModule,
     OrderModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
