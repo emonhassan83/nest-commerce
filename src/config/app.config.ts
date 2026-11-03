@@ -12,10 +12,21 @@ export function getEnvOrThrow(key: string): string {
   return value;
 }
 
+/**
+ * Parses comma-separated origin strings into a clean array.
+ */
+export function parseCorsOrigins(raw: string): string[] {
+  return raw
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
+}
+
 export interface AppConfig {
   nodeEnv: string;
   port: number;
   apiPrefix: string;
+  corsOrigins: string[];
 }
 
 export default registerAs(
@@ -24,5 +35,6 @@ export default registerAs(
     nodeEnv: getEnvOrThrow('NODE_ENV'),
     port: Number(getEnvOrThrow('PORT')),
     apiPrefix: getEnvOrThrow('API_PREFIX'),
+    corsOrigins: parseCorsOrigins(getEnvOrThrow('CORS_ORIGIN')),
   }),
 );
