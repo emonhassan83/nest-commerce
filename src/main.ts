@@ -10,6 +10,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.getOrThrow<number>('app.port');
+  const ip = configService.getOrThrow<string>('app.ip');
   const apiPrefix = configService.getOrThrow<string>('app.apiPrefix');
   const corsOrigins = configService.getOrThrow<string[]>('app.corsOrigins');
   const isWildcard = corsOrigins.includes('*');
@@ -33,9 +34,10 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(port);
-  logger.log(`Nest Commerce server listening on port ${port} with prefix /${apiPrefix}`);
+  // Bind to '0.0.0.0' to ensure availability across all network interfaces (including IP)
+  await app.listen(port, '0.0.0.0');
+  logger.log(`Nest Commerce server listening on http://${ip}:${port}/${apiPrefix}`);
   logger.log(`CORS enabled for origins: ${isWildcard ? '*' : corsOrigins.join(', ')}`);
-  logger.log(`Swagger documentation available at: http://localhost:${port}/docs`);
+  logger.log(`Swagger documentation available at: http://${ip}:${port}/docs`);
 }
 await bootstrap();

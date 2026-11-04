@@ -26,7 +26,7 @@ describe('ProductService', () => {
       cartItem: {
         deleteMany: vi.fn(),
       } as any,
-      $transaction: vi.fn(async (cb: (tx: any) => Promise<any>) => cb(prisma)),
+      $transaction: vi.fn(async (cb: any) => (typeof cb === 'function' ? cb(prisma) : Promise.all(cb))) as any,
     };
 
     service = new ProductService(prisma as PrismaService);

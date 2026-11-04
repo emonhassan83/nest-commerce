@@ -1,11 +1,15 @@
 import { INestApplication, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 /**
  * Sets up OpenAPI / Swagger documentation with best-practice tags, metadata, and security schemes.
  */
 export function setupSwagger(app: INestApplication): void {
   const logger = new Logger('Swagger');
+  const configService = app.get(ConfigService);
+  const ip = configService.getOrThrow<string>('app.ip');
+  const port = configService.getOrThrow<number>('app.port');
 
   const config = new DocumentBuilder()
     .setTitle('Nest Commerce API')
@@ -16,6 +20,8 @@ export function setupSwagger(app: INestApplication): void {
         'Click the **Authorize** button on the right to set your JWT token.',
     )
     .setVersion('1.0.0')
+    .addServer(`http://${ip}:${port}`, 'Network IP Server')
+    .addServer(`http://localhost:${port}`, 'Localhost Server')
     .addApiKey(
       {
         type: 'apiKey',
@@ -29,11 +35,6 @@ export function setupSwagger(app: INestApplication): void {
     .addTag('Auth', 'Authentication, user registration, login, and session revocation')
     .addTag('User', 'User management, personal profile, and administrative role controls')
     .addTag('Upload', 'AWS S3 multi-file and single-file storage upload service')
-    .addTag('Category', 'Product category management, catalog hierarchy, and administration')
-    .addTag('Product', 'Product catalog management, inventory, and administration')
-    .addTag('Cart', 'Shopping cart management, items, quantity, and real-time totals')
-    .addTag('Order', 'Order management, checkout, status progression, and inventory fulfillment')
-    .addTag('Payment', 'Stripe checkout sessions, payment confirmations, and revenue transactions')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -47,5 +48,5 @@ export function setupSwagger(app: INestApplication): void {
     customSiteTitle: 'Nest Commerce API Documentation',
   });
 
-  logger.log('Swagger documentation initialized at path /docs');
+  logger.log(`Swagger documentation initialized at path http://${ip}:${port}/docs`);
 }
